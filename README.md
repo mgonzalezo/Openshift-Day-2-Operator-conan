@@ -49,16 +49,20 @@ ODF 4.20
 ### 📄 **requirements.txt**
 Includes all software packages required to execute the tool:
 - `pandas` - Data manipulation and analysis
-- `openpyxl` - Excel file processing
-- `re` - Regular expressions (built-in)
+- `requests` - HTTP library for additional utilities
 
 ### 🐍 **search_releases.py**
 Main Python script that searches for Day 2 operator release information including:
 - **BU** (Business Unit)
 - **Release** (Version information)
 - **GA Date** (General Availability date)
+- **GA Name** (Specific release name)
+- **Maintainer** (Product maintainer information)
 - **Link** (Direct link to product pages)
 - **Product** (Product suite name)
+
+### 📄 **results.txt** (Generated)
+Output file containing the search results. **Note**: This file is automatically excluded from Git commits due to privacy considerations.
 
 ## Setup Instructions
 
@@ -74,7 +78,7 @@ cd Openshift-Day-2-Operator-conan
 1. Access the **"Reports"** section at https://productpages.redhat.com/
 2. Navigate to the **"Exports"** section
 3. Select **"Google Sheets Export"**
-4. Download the Excel file to the same folder as this repository
+4. Download the **CSV file** to the same folder as this repository (the tool now uses CSV format for better performance)
 
 ### 3. Set Up Python Environment
 
@@ -102,33 +106,55 @@ python search_releases.py
 
 The tool will automatically:
 
-1. **Load** the downloaded Excel file from Red Hat Product Pages
+1. **Load** the downloaded CSV file from Red Hat Product Pages
 2. **Parse** the operator-to-product mappings from `source.txt`
-3. **Filter** results based on versions in `reference.txt`
+3. **Filter** results to show only future releases (after current date)
 4. **Group** operators by their product suites
-5. **Display** comprehensive release information for each product suite
+5. **Display** the closest 2 releases per product suite for focused analysis
+6. **Export** results to `results.txt` for offline review
 
 ## Sample Output
 
 ```
-🔍 Product: Red Hat OpenShift Data Foundation
+PRODUCTS WITH FUTURE RELEASES FOUND
+================================================================================
+
+Product 1: Red Hat OpenShift Data Foundation
 Operators: ceph-csi-operator, mcg-operator, ocs-operator, odf-operator, ...
 ------------------------------------------------------------
-✅ Found 13 release(s):
+Found 8 future release(s), showing closest 2:
   BU: Storage
   Release: Red Hat OpenShift Data Foundation 4.20
-  GA date: 2025-11-06
+  GA date: 2026-01-05
+  GA name: odf-4.20.2
+  Maintainer: asriram (Anjana Sriram)
   Link: http://productpages.redhat.com/odf-4.20/people/
   Product: Red Hat OpenShift Data Foundation
   ----------------------------------------
+  BU: Storage
+  Release: Red Hat OpenShift Data Foundation 4.17
+  GA date: 2026-03-17
+  GA name: Maintenance Phase
+  Maintainer: asriram (Anjana Sriram)
+  Link: http://productpages.redhat.com/odf-4.17/people/
+  Product: Red Hat OpenShift Data Foundation
+  ----------------------------------------
+
+SUMMARY
+================================================================================
+Query date: 2025-09-29
+Products with future releases: 7
+Products with no future releases: 6
+Total future releases found: 25
+Total operators analyzed: 35
 ```
 
 ## Supported Product Suites
 
 - **Red Hat OpenShift Data Foundation** (10 operators)
 - **Red Hat Advanced Cluster Management for Kubernetes** (2 operators)
-- **Red Hat OpenShift Platform** (9 operators)
-- **Red Hat OpenShift Networking** (3 operators)
+- **Red Hat OpenShift Container Platform** (4 operators)
+- **Red Hat OpenShift Platform** (8 operators)
 - **Red Hat OpenShift Logging** (2 operators)
 - **Red Hat OpenShift Service Mesh** (2 operators)
 - **Red Hat Quay** (1 operator)
@@ -136,32 +162,40 @@ Operators: ceph-csi-operator, mcg-operator, ocs-operator, odf-operator, ...
 - **Red Hat OpenShift API for Data Protection** (1 operator)
 - **Red Hat Build of Keycloak** (1 operator)
 - **Red Hat OpenShift Distributed Tracing Platform** (1 operator)
-- **Red Hat OpenShift Monitoring** (1 operator)
-- **Red Hat OpenShift Storage** (1 operator)
+- **Observability** (1 operator)
+- **OpenShift Platform** (1 operator)
 
 ## Features
 
 - ✅ **Product Suite Grouping**: Automatically groups operators by their product suites
-- ✅ **Version Filtering**: Focuses on specific target versions (OCP 4.20, ACM 2.15, etc.)
-- ✅ **First GA Date Priority**: Shows only the initial GA date for each release
-- ✅ **Direct Links**: Provides direct links to Red Hat Product Pages
+- ✅ **Future Release Filtering**: Shows only releases with GA dates after the current date
+- ✅ **Closest Release Priority**: Displays the 2 closest releases per product for focused analysis
+- ✅ **Comprehensive Information**: Includes BU, Release, GA Date, GA Name, Maintainer, and Links
+- ✅ **CSV Processing**: Optimized for CSV file format for better performance
+- ✅ **Privacy Protection**: Results are automatically excluded from Git commits
+- ✅ **Detailed Statistics**: Provides comprehensive summary and breakdown information
 - ✅ **Comprehensive Coverage**: Supports 35 Day 2 operators across 13+ product suites
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **"No Excel file found"**
-   - Ensure you've downloaded the Excel export from Red Hat Product Pages
+1. **"No CSV file found"**
+   - Ensure you've downloaded the CSV export from Red Hat Product Pages
    - Verify the file is in the same directory as the script
+   - The tool looks for files starting with "Product-Pages-Export"
 
-2. **"No data found for specified versions"**
-   - Check that `reference.txt` contains the correct version numbers
-   - Verify the Excel file contains data for the target versions
+2. **"No future releases found"**
+   - The tool only shows releases with GA dates after the current date
+   - Check that the data contains upcoming releases for your operators
 
 3. **"Module not found" errors**
    - Ensure virtual environment is activated
    - Run `pip install -r requirements.txt`
+
+4. **"SettingWithCopyWarning"**
+   - This is a pandas warning and doesn't affect functionality
+   - The tool continues to work normally despite this warning
 
 ## Contributing
 

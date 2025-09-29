@@ -1,0 +1,24 @@
+# Sensitive data files - DO NOT COMMIT
+*.xlsx
+*.xls
+*.csv
+credentials.json
+service_account.json
+*.json
+
+# Python files (keep only search_releases.py)
+excel_reader.py
+filtered_analysis.py
+search_results.txt
+
+# Virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE and OS files
+.vscode/
+.DS_Store 

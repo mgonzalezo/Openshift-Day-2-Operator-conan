@@ -3,7 +3,7 @@ Operator	Product Suite
 2.  ceph-csi-operator	Red Hat OpenShift Data Foundation
 3.  cert-manager-operator	OpenShift Platform
 4.  cluster-logging-operator	Red Hat OpenShift Logging
-5.  cluster-observability operator	Red Hat OpenShift Monitoring
+5.  cluster-observability operator	Observability
 6.  compliance-operator	Red Hat OpenShift Platform
 7.  file-integrity-operator	Red Hat OpenShift Platform
 8.  openshift-custom-metrics-autoscaler	Red Hat OpenShift Platform

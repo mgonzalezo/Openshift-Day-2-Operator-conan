@@ -7,17 +7,23 @@ import re
 from collections import OrderedDict
 from datetime import datetime, date
 
-def load_excel_data():
+def load_csv_data():
     try:
-        excel_files = [f for f in os.listdir('.') if f.endswith(('.xlsx', '.xls'))]
-        if not excel_files:
-            print("Error: No Excel file found")
-            return None
+        # Look for the main Product-Pages-Export CSV file first
+        product_pages_files = [f for f in os.listdir('.') if f.startswith('Product-Pages-Export') and f.endswith('.csv')]
+        if product_pages_files:
+            csv_file = product_pages_files[0]
+        else:
+            # Fallback to any CSV file
+            csv_files = [f for f in os.listdir('.') if f.endswith('.csv')]
+            if not csv_files:
+                print("Error: No CSV file found")
+                return None
+            csv_file = csv_files[0]
         
-        excel_file = excel_files[0]
-        print(f"Loading: {excel_file}")
+        print(f"Loading: {csv_file}")
         
-        df = pd.read_excel(excel_file, sheet_name="Releases GAs")
+        df = pd.read_csv(csv_file)
         print(f"Loaded {len(df)} records")
         return df
         
@@ -60,9 +66,15 @@ def load_search_items():
         print(f"Error loading source.txt: {e}")
         return []
 
-def search_by_product(df, product_name):
+def search_by_product(df, product_name, operator_name=None):
     if not product_name:
         return pd.DataFrame()
+    
+    # Special case for cluster observability operator - search by specific release name
+    if operator_name == "cluster-observability operator" or operator_name == "cluster observability operator":
+        release_matches = df[df['Release'].astype(str).str.contains('cluster observability operator', case=False, na=False)]
+        if not release_matches.empty:
+            return release_matches
     
     search_columns = ['Product', 'Release', 'Release shortname', 'Release ID', 'GA name']
     matches = pd.DataFrame()
@@ -128,12 +140,15 @@ def format_results_by_product(operator_product_pairs, df):
         total_releases_before_filter = 0
         
         for product, operators in product_groups.items():
-            matches = search_by_product(df, product)
+            # Pass the first operator name for specific matching
+            first_operator = operators[0] if operators else None
+            matches = search_by_product(df, product, first_operator)
             
             if not matches.empty:
                 # Count total releases before filtering
                 matches['GA date'] = pd.to_datetime(matches['GA date'])
-                matches_first = matches.loc[matches.groupby('Release')['GA date'].idxmin()]
+                # For future planning, we want the latest releases, not the earliest
+                matches_first = matches.loc[matches.groupby('Release')['GA date'].idxmax()]
                 total_releases_before_filter += len(matches_first)
                 
                 # Filter for future releases only
@@ -165,16 +180,25 @@ def format_results_by_product(operator_product_pairs, df):
                 write_to_file_and_print(f"Operators: {', '.join(operators)}", f)
                 write_to_file_and_print("-" * 60, f)
                 
-                write_to_file_and_print(f"Found {len(matches_first)} future release(s):", f)
-                for _, row in matches_first.iterrows():
+                # Sort releases by GA date and take only the 2 closest
+                matches_sorted = matches_first.sort_values('GA date')
+                closest_2_releases = matches_sorted.head(2)
+                
+                write_to_file_and_print(f"Found {len(matches_first)} future release(s), showing closest 2:", f)
+                for _, row in closest_2_releases.iterrows():
                     write_to_file_and_print(f"  BU: {row['BU']}", f)
                     write_to_file_and_print(f"  Release: {row['Release']}", f)
                     write_to_file_and_print(f"  GA date: {row['GA date'].strftime('%Y-%m-%d')}", f)
+                    write_to_file_and_print(f"  GA name: {row['GA name']}", f)
+                    maintainer = row.get('Maintainers', '')
+                    if pd.isna(maintainer) or maintainer == '':
+                        maintainer = 'N/A'
+                    write_to_file_and_print(f"  Maintainer: {maintainer}", f)
                     write_to_file_and_print(f"  Link: {row['Link']}", f)
                     write_to_file_and_print(f"  Product: {row['Product']}", f)
                     write_to_file_and_print("  " + "-" * 40, f)
                 
-                total_found += len(matches_first)
+                total_found += len(closest_2_releases)
         
         # Display products WITHOUT future releases found
         if products_without_releases:
@@ -237,7 +261,7 @@ def main():
     print(f"Filter: Only showing future releases (after {date.today()})")
     print("="*60)
     
-    df = load_excel_data()
+    df = load_csv_data()
     if df is None:
         return
     

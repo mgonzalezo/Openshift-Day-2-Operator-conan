@@ -1,5 +1,5 @@
 OpenShift Day 2 Operator Search Results - Conan Tool
-Generated: 2025-09-29 16:43:36
+Generated: 2025-09-29 22:16:12
 Filter: Only showing releases with GA dates after 2025-09-29
 ================================================================================
 Search Results by Product/Release Mapping (Source.txt Order):
@@ -11,49 +11,67 @@ PRODUCTS WITH FUTURE RELEASES FOUND
 Product 1: Red Hat Advanced Cluster Management for Kubernetes
 Operators: advanced-cluster-management, multicluster-engine
 ------------------------------------------------------------
-Found 1 future release(s):
+Found 3 future release(s), showing closest 2:
   BU: Hybrid Platforms
-  Release: Red Hat Advanced Cluster Management for Kubernetes 2.15
-  GA date: 2025-12-04
-  Link: http://productpages.redhat.com/rhacm-2.15/people/
+  Release: Red Hat Advanced Cluster Management for Kubernetes 2.12.z Releases
+  GA date: 2025-10-15
+  GA name: ACM 2.12.5 GA
+  Maintainer: rhaigner (Robyn Haignere)
+  Link: http://productpages.redhat.com/rhacm-2.12.z/people/
+  Product: Red Hat Advanced Cluster Management for Kubernetes
+  ----------------------------------------
+  BU: Hybrid Platforms
+  Release: Red Hat Advanced Cluster Management for Kubernetes 2.11.z Releases
+  GA date: 2025-10-22
+  GA name: ACM 2.11.9 GA
+  Maintainer: rhaigner (Robyn Haignere)
+  Link: http://productpages.redhat.com/rhacm-2.11.z/people/
   Product: Red Hat Advanced Cluster Management for Kubernetes
   ----------------------------------------
 
 Product 2: Red Hat OpenShift Data Foundation
 Operators: ceph-csi-operator, mcg-operator, ocs-operator, ocs-client-operator, odf-csi-addons-operator, odf-dependencies, odf-operator, odf-prometheus-operator, recipe, rook-ceph-operator
 ------------------------------------------------------------
-Found 2 future release(s):
-  BU: Storage
-  Release: Red Hat OpenShift Data Foundation
-  GA date: 2026-03-05
-  Link: http://productpages.redhat.com/odf-4.21/people/
-  Product: Red Hat OpenShift Data Foundation
-  ----------------------------------------
+Found 8 future release(s), showing closest 2:
   BU: Storage
   Release: Red Hat OpenShift Data Foundation 4.20
-  GA date: 2025-11-06
+  GA date: 2026-01-05
+  GA name: odf-4.20.2
+  Maintainer: asriram (Anjana Sriram)
   Link: http://productpages.redhat.com/odf-4.20/people/
   Product: Red Hat OpenShift Data Foundation
   ----------------------------------------
+  BU: Storage
+  Release: Red Hat OpenShift Data Foundation 4.17
+  GA date: 2026-03-17
+  GA name: Maintenance Phase
+  Maintainer: asriram (Anjana Sriram)
+  Link: http://productpages.redhat.com/odf-4.17/people/
+  Product: Red Hat OpenShift Data Foundation
+  ----------------------------------------
 
-Product 3: Red Hat OpenShift Monitoring
+Product 3: Observability
 Operators: cluster-observability operator
 ------------------------------------------------------------
-Found 1 future release(s):
+Found 1 future release(s), showing closest 2:
   BU: Hybrid Platforms
-  Release: Red Hat OpenShift Monitoring
-  GA date: 2025-10-21
-  Link: http://productpages.redhat.com/obs-in_cluster_monitoring/people/
+  Release: cluster observability operator
+  GA date: 2025-11-10
+  GA name: cluster observability GA 1.3.0
+  Maintainer: nyancey (Nicole Yancey)
+  Link: http://productpages.redhat.com/obs-cluster_observability_operator/people/
   Product: Observability
   ----------------------------------------
 
 Product 4: Red Hat OpenShift Service Mesh
 Operators: kiali-ossm, service-mesh-operator
 ------------------------------------------------------------
-Found 1 future release(s):
+Found 1 future release(s), showing closest 2:
   BU: Hybrid Platforms
   Release: Red Hat OpenShift Service Mesh 3.2
   GA date: 2025-12-12
+  GA name: GA
+  Maintainer: nyechiel (Nir Yechiel), oblaut (Ofer Blaut), rcernich (Rob Cernich), tbagassi (Tommaso Bagassi), dward (David Ward), jlongmui (Jamie Longmuir), ehopfenb (Emily Hopfenberg)
   Link: http://productpages.redhat.com/ossm-3.2/people/
   Product: Red Hat OpenShift Service Mesh
   ----------------------------------------
@@ -61,29 +79,48 @@ Found 1 future release(s):
 Product 5: Red Hat OpenShift Container Platform
 Operators: kubernetes-nmstate-operator, local-storage-operator, metallb-operator, sriov-network-operator
 ------------------------------------------------------------
-Found 2 future release(s):
-  BU: Hybrid Platforms
-  Release: Red Hat OpenShift Container Platform
-  GA date: 2026-02-27
-  Link: http://productpages.redhat.com/openshift-4.21/people/
-  Product: Red Hat OpenShift Container Platform
-  ----------------------------------------
+Found 10 future release(s), showing closest 2:
   BU: Hybrid Platforms
   Release: Red Hat OpenShift Container Platform 4.20
   GA date: 2025-10-21
+  GA name: OCP 4.20 Target GA
+  Maintainer: rsidhart (Ramona Sidharta), mdineen (Margaret Dineen), lfriedma (Laurie Friedman)
   Link: http://productpages.redhat.com/openshift-4.20/people/
+  Product: Red Hat OpenShift Container Platform
+  ----------------------------------------
+  BU: Hybrid Platforms
+  Release: Red Hat OpenShift Container Platform 4.17.z Releases
+  GA date: 2025-11-19
+  GA name: 4.17.44 in Fast Channel
+  Maintainer: rsidhart (Ramona Sidharta)
+  Link: http://productpages.redhat.com/openshift-4.17.z/people/
   Product: Red Hat OpenShift Container Platform
   ----------------------------------------
 
 Product 6: Red Hat Quay
 Operators: quay-operator
 ------------------------------------------------------------
-Found 1 future release(s):
+Found 1 future release(s), showing closest 2:
   BU: Hybrid Platforms
   Release: Red Hat Quay 3.16
   GA date: 2025-11-13
+  GA name: Quay 3.16 GA
+  Maintainer: doconnor (Dave O'Connor), bcaton (Brandon Caton), lizhao (Linan Zhao)
   Link: http://productpages.redhat.com/quay-3.16/people/
   Product: Red Hat Quay
+  ----------------------------------------
+
+Product 7: Red Hat Build of Keycloak
+Operators: rhbk-operator
+------------------------------------------------------------
+Found 1 future release(s), showing closest 2:
+  BU: Application Runtimes
+  Release: Red Hat build of Keycloak 26.0.x
+  GA date: 2025-10-30
+  GA name: 26.4.x GA
+  Maintainer: peholase (Petr Holasek)
+  Link: http://productpages.redhat.com/rhbk-26/people/
+  Product: Red Hat build of Keycloak
   ----------------------------------------
 
 PRODUCTS WITH NO FUTURE RELEASES
@@ -114,12 +151,7 @@ Operators: openshift-gitops-operator
 Status: No future releases found (after 2025-09-29)
 ------------------------------------------------------------
 
-Product 6: Red Hat Build of Keycloak
-Operators: rhbk-operator
-Status: No future releases found (after 2025-09-29)
-------------------------------------------------------------
-
-Product 7: Red Hat OpenShift Distributed Tracing Platform
+Product 6: Red Hat OpenShift Distributed Tracing Platform
 Operators: tempo-product
 Status: No future releases found (after 2025-09-29)
 ------------------------------------------------------------
@@ -127,16 +159,16 @@ Status: No future releases found (after 2025-09-29)
 SUMMARY
 ================================================================================
 Query date: 2025-09-29
-Products with future releases: 6
-Products with no future releases: 7
+Products with future releases: 7
+Products with no future releases: 6
 Unmapped operators: 0
-Total future releases found: 8
+Total future releases found: 25
 Total products analyzed: 13
 
 Operator Answer Breakdown:
 ----------------------------------------
-Operators with future releases: 20
-Operators without future releases: 15
+Operators with future releases: 21
+Operators without future releases: 14
 Total operators analyzed: 35
 
 Product Operator Breakdown:
@@ -145,7 +177,7 @@ Red Hat Advanced Cluster Management for Kubernetes: 2 operators
 Red Hat OpenShift Data Foundation: 10 operators
 OpenShift Platform: 1 operators
 Red Hat OpenShift Logging: 2 operators
-Red Hat OpenShift Monitoring: 1 operators
+Observability: 1 operators
 Red Hat OpenShift Platform: 8 operators
 Red Hat OpenShift Service Mesh: 2 operators
 Red Hat OpenShift Container Platform: 4 operators

@@ -11,6 +11,9 @@ excel_reader.py
 filtered_analysis.py
 search_results.txt
 
+# Output files - privacy
+results.txt
+
 # Virtual environment
 venv/
 .venv/

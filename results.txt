@@ -1,5 +1,5 @@
 OpenShift Day 2 Operator Search Results - Conan Tool
-Generated: 2025-09-29 16:35:27
+Generated: 2025-09-29 16:43:36
 Filter: Only showing releases with GA dates after 2025-09-29
 ================================================================================
 Search Results by Product/Release Mapping (Source.txt Order):
@@ -132,6 +132,12 @@ Products with no future releases: 7
 Unmapped operators: 0
 Total future releases found: 8
 Total products analyzed: 13
+
+Operator Answer Breakdown:
+----------------------------------------
+Operators with future releases: 20
+Operators without future releases: 15
+Total operators analyzed: 35
 
 Product Operator Breakdown:
 ----------------------------------------

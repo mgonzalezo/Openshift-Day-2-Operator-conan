@@ -118,6 +118,10 @@ def format_results_by_product(operator_product_pairs, df):
                     product_groups[product] = []
                 product_groups[product].append(operator)
         
+        # Track operators with and without answers
+        operators_with_answers = []
+        operators_without_answers = []
+        
         # Separate products with and without releases
         products_with_releases = []
         products_without_releases = []
@@ -137,10 +141,17 @@ def format_results_by_product(operator_product_pairs, df):
                 
                 if not future_matches.empty:
                     products_with_releases.append((product, operators, future_matches))
+                    operators_with_answers.extend(operators)
                 else:
                     products_without_releases.append((product, operators))
+                    operators_without_answers.extend(operators)
             else:
                 products_without_releases.append((product, operators))
+                operators_without_answers.extend(operators)
+        
+        # Add unmapped operators to those without answers
+        unmapped_operators = [op for op, prod in operator_product_pairs if not prod]
+        operators_without_answers.extend(unmapped_operators)
         
         # Display products WITH future releases found
         if products_with_releases:
@@ -178,7 +189,6 @@ def format_results_by_product(operator_product_pairs, df):
                 write_to_file_and_print("-" * 60, f)
         
         # Handle operators without product mapping (in order)
-        unmapped_operators = [op for op, prod in operator_product_pairs if not prod]
         if unmapped_operators:
             section_header = "\nUNMAPPED OPERATORS"
             write_to_file_and_print(section_header, f)
@@ -198,6 +208,13 @@ def format_results_by_product(operator_product_pairs, df):
         write_to_file_and_print(f"Unmapped operators: {len(unmapped_operators)}", f)
         write_to_file_and_print(f"Total future releases found: {sum(len(matches) for _, _, matches in products_with_releases)}", f)
         write_to_file_and_print(f"Total products analyzed: {len(product_groups)}", f)
+        
+        # Operator answer breakdown
+        write_to_file_and_print("\nOperator Answer Breakdown:", f)
+        write_to_file_and_print("-" * 40, f)
+        write_to_file_and_print(f"Operators with future releases: {len(operators_with_answers)}", f)
+        write_to_file_and_print(f"Operators without future releases: {len(operators_without_answers)}", f)
+        write_to_file_and_print(f"Total operators analyzed: {len(operators_with_answers) + len(operators_without_answers)}", f)
         
         # Product operator breakdown
         write_to_file_and_print("\nProduct Operator Breakdown:", f)

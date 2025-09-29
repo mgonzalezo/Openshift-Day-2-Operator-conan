@@ -9,10 +9,10 @@ Operator	Product Suite
 8.  openshift-custom-metrics-autoscaler	Red Hat OpenShift Platform
 9.  loki-operator	Red Hat OpenShift Logging
 10. kiali-ossm	Red Hat OpenShift Service Mesh
-11. kubernetes-nmstate-operator	Red Hat OpenShift Networking
-12. local-storage-operator	Red Hat OpenShift Storage
+11. kubernetes-nmstate-operator	Red Hat OpenShift Container Platform
+12. local-storage-operator	Red Hat OpenShift Container Platform
 13. mcg-operator	Red Hat OpenShift Data Foundation
-14. metallb-operator	Red Hat OpenShift Networking
+14. metallb-operator	Red Hat OpenShift Container Platform
 15. multicluster-engine	Red Hat Advanced Cluster Management for Kubernetes
 16. numa-resources-operator	Red Hat OpenShift Platform
 17. node-healthcheck-operator	Red Hat OpenShift Platform
@@ -31,6 +31,6 @@ Operator	Product Suite
 30. rook-ceph-operator	Red Hat OpenShift Data Foundation
 31. self-node-remediation	Red Hat OpenShift Platform
 32. service-mesh-operator	Red Hat OpenShift Service Mesh
-33. sriov-network-operator	Red Hat OpenShift Networking
+33. sriov-network-operator	Red Hat OpenShift Container Platform
 34. tempo-product	Red Hat OpenShift Distributed Tracing Platform
 35. topology-aware-lifecycle-manager	Red Hat OpenShift Platform

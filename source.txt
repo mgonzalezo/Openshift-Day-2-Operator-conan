@@ -1,3 +1,4 @@
+Operator	Product Suite
 1.  advanced-cluster-management	Red Hat Advanced Cluster Management for Kubernetes
 2.  ceph-csi-operator	Red Hat OpenShift Data Foundation
 3.  cert-manager-operator	OpenShift Platform

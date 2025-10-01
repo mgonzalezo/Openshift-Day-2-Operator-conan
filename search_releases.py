@@ -3,40 +3,104 @@
 import pandas as pd
 import os
 import re
+import argparse
 from collections import OrderedDict
 from datetime import datetime, date
 
-def load_csv_data():
+def parse_arguments():
+    """Parse command-line arguments"""
+    parser = argparse.ArgumentParser(
+        description='OpenShift Day 2 Operator Search Tool - Search for product releases',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+Examples:
+  %(prog)s                                    # Use default files
+  %(prog)s -c mydata.csv -s operators.txt    # Specify custom input files
+  %(prog)s --show-all                        # Show all releases, not just future ones
+  %(prog)s --no-version-filter               # Disable version filtering
+  %(prog)s -o custom_results.txt             # Specify custom output file
+        '''
+    )
+    
+    parser.add_argument(
+        '-c', '--csv-file',
+        dest='csv_file',
+        default=None,
+        help='Path to CSV file (default: auto-detect Product-Pages-Export-*.csv or first .csv file)'
+    )
+    
+    parser.add_argument(
+        '-s', '--source-file',
+        dest='source_file',
+        default='source.txt',
+        help='Path to source file containing operator-product mappings (default: source.txt)'
+    )
+    
+    parser.add_argument(
+        '-r', '--reference-file',
+        dest='reference_file',
+        default='reference.txt',
+        help='Path to reference file containing version filters (default: reference.txt)'
+    )
+    
+    parser.add_argument(
+        '-o', '--output',
+        dest='output_file',
+        default='results.txt',
+        help='Path to output file (default: results.txt)'
+    )
+    
+    parser.add_argument(
+        '--show-all',
+        action='store_true',
+        help='Show all releases, not just future ones'
+    )
+    
+    parser.add_argument(
+        '--no-version-filter',
+        action='store_true',
+        help='Disable version filtering from reference.txt'
+    )
+    
+    return parser.parse_args()
+
+def load_csv_data(csv_file=None):
     try:
-        product_pages_files = [f for f in os.listdir('.') if f.startswith('Product-Pages-Export') and f.endswith('.csv')]
-        if product_pages_files:
-            csv_file = product_pages_files[0]
+        if csv_file:
+            print(f"Loading: {csv_file}")
+            df = pd.read_csv(csv_file)
+            print(f"Loaded {len(df)} records")
+            return df
         else:
-            csv_files = [f for f in os.listdir('.') if f.endswith('.csv')]
-            if not csv_files:
-                print("Error: No CSV file found")
-                return None
-            csv_file = csv_files[0]
-        
-        print(f"Loading: {csv_file}")
-        
-        df = pd.read_csv(csv_file)
-        print(f"Loaded {len(df)} records")
-        return df
+            product_pages_files = [f for f in os.listdir('.') if f.startswith('Product-Pages-Export') and f.endswith('.csv')]
+            if product_pages_files:
+                csv_file = product_pages_files[0]
+            else:
+                csv_files = [f for f in os.listdir('.') if f.endswith('.csv')]
+                if not csv_files:
+                    print("Error: No CSV file found")
+                    return None
+                csv_file = csv_files[0]
+            
+            print(f"Loading: {csv_file}")
+            
+            df = pd.read_csv(csv_file)
+            print(f"Loaded {len(df)} records")
+            return df
         
     except Exception as e:
         print(f"Error: {e}")
         return None
 
-def load_reference_versions():
+def load_reference_versions(reference_file='reference.txt'):
     """Load reference versions from reference.txt and create a mapping"""
     version_map = {}
     try:
-        if not os.path.exists("reference.txt"):
-            print("Warning: reference.txt not found, no version filtering will be applied")
+        if not os.path.exists(reference_file):
+            print(f"Warning: {reference_file} not found, no version filtering will be applied")
             return version_map
         
-        with open("reference.txt", 'r', encoding='utf-8') as f:
+        with open(reference_file, 'r', encoding='utf-8') as f:
             lines = [line.strip() for line in f if line.strip()]
         
         for line in lines:
@@ -56,20 +120,20 @@ def load_reference_versions():
                 elif product_abbr == "ODF":
                     version_map["Red Hat OpenShift Data Foundation"] = version
         
-        print(f"Loaded {len(version_map)} version filters from reference.txt")
+        print(f"Loaded {len(version_map)} version filters from {reference_file}")
         return version_map
         
     except Exception as e:
-        print(f"Error loading reference.txt: {e}")
+        print(f"Error loading {reference_file}: {e}")
         return version_map
 
-def load_search_items():
+def load_search_items(source_file='source.txt'):
     try:
-        if not os.path.exists("source.txt"):
-            print("Error: source.txt not found")
+        if not os.path.exists(source_file):
+            print(f"Error: {source_file} not found")
             return []
         
-        with open("source.txt", 'r', encoding='utf-8') as f:
+        with open(source_file, 'r', encoding='utf-8') as f:
             lines = [line.strip() for line in f if line.strip()]
         
         items = []
@@ -95,11 +159,11 @@ def load_search_items():
                 if operator:
                     items.append((operator, "", ""))
         
-        print(f"Loaded {len(items)} operator-product mappings")
+        print(f"Loaded {len(items)} operator-product mappings from {source_file}")
         return items
         
     except Exception as e:
-        print(f"Error loading source.txt: {e}")
+        print(f"Error loading {source_file}: {e}")
         return []
 
 def search_by_product(df, product_name, release_name=None):
@@ -150,15 +214,18 @@ def write_to_file_and_print(text, file_handle=None):
     if file_handle:
         file_handle.write(text + '\n')
 
-def format_results_by_product(operator_product_pairs, df, version_map):
+def format_results_by_product(operator_product_pairs, df, version_map, output_file='results.txt', show_all=False):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     today = date.today()
     
-    with open("results.txt", 'w', encoding='utf-8') as f:
+    with open(output_file, 'w', encoding='utf-8') as f:
         header = f"OpenShift Day 2 Operator Search Results - Conan Tool"
         write_to_file_and_print(header, f)
         write_to_file_and_print(f"Generated: {timestamp}", f)
-        write_to_file_and_print(f"Filter: Only showing releases with GA dates after {today}", f)
+        if show_all:
+            write_to_file_and_print(f"Filter: Showing all releases (including past and future)", f)
+        else:
+            write_to_file_and_print(f"Filter: Only showing releases with GA dates after {today}", f)
         if version_map:
             write_to_file_and_print(f"Version Filter: {', '.join([f'{k}: {v}' for k, v in version_map.items()])}", f)
         write_to_file_and_print("="*80, f)
@@ -201,21 +268,26 @@ def format_results_by_product(operator_product_pairs, df, version_map):
             
             if not matches.empty:
                 # Apply version filtering first if available
-                matches = filter_by_version(matches, product, version_map)
+                if version_map:
+                    matches = filter_by_version(matches, product, version_map)
                 
                 if not matches.empty:
                     # Create a copy to avoid SettingWithCopyWarning
                     matches = matches.copy()
                     matches['GA date'] = pd.to_datetime(matches['GA date'])
                     
-                    # Filter for future releases first
-                    future_only = filter_future_releases(matches)
-                    
-                    if not future_only.empty:
-                        # Get the earliest future GA date for each release
-                        future_matches = future_only.loc[future_only.groupby('Release')['GA date'].idxmin()]
+                    if show_all:
+                        # Get the earliest GA date for each release
+                        future_matches = matches.loc[matches.groupby('Release')['GA date'].idxmin()]
                     else:
-                        future_matches = pd.DataFrame()
+                        # Filter for future releases first
+                        future_only = filter_future_releases(matches)
+                        
+                        if not future_only.empty:
+                            # Get the earliest future GA date for each release
+                            future_matches = future_only.loc[future_only.groupby('Release')['GA date'].idxmin()]
+                        else:
+                            future_matches = pd.DataFrame()
                     
                     if not future_matches.empty:
                         products_with_releases.append((product, operators, future_matches))
@@ -242,7 +314,10 @@ def format_results_by_product(operator_product_pairs, df, version_map):
         operators_without_answers.extend(unmapped_operators)
         
         if products_with_releases:
-            section_header = "\nPRODUCTS WITH FUTURE RELEASES FOUND"
+            if show_all:
+                section_header = "\nPRODUCTS WITH RELEASES FOUND"
+            else:
+                section_header = "\nPRODUCTS WITH FUTURE RELEASES FOUND"
             write_to_file_and_print(section_header, f)
             write_to_file_and_print("="*80, f)
             
@@ -255,7 +330,10 @@ def format_results_by_product(operator_product_pairs, df, version_map):
                 matches_sorted = matches_first.sort_values('GA date')
                 closest_2_releases = matches_sorted.head(2)
                 
-                write_to_file_and_print(f"Found {len(matches_first)} future release(s):", f)
+                if show_all:
+                    write_to_file_and_print(f"Found {len(matches_first)} release(s):", f)
+                else:
+                    write_to_file_and_print(f"Found {len(matches_first)} future release(s):", f)
                 for _, row in closest_2_releases.iterrows():
                     write_to_file_and_print(f"  BU: {row['BU']}", f)
                     write_to_file_and_print(f"  Release: {row['Release']}", f)
@@ -270,14 +348,19 @@ def format_results_by_product(operator_product_pairs, df, version_map):
                     write_to_file_and_print("  " + "-" * 40, f)
         
         if products_without_releases:
-            section_header = "\nPRODUCTS WITH NO FUTURE RELEASES"
+            if show_all:
+                section_header = "\nPRODUCTS WITH NO RELEASES"
+                status_msg = "No releases found"
+            else:
+                section_header = "\nPRODUCTS WITH NO FUTURE RELEASES"
+                status_msg = f"No future releases found (after {today})"
             write_to_file_and_print(section_header, f)
             write_to_file_and_print("="*80, f)
             
             for i, (product, operators) in enumerate(products_without_releases, 1):
                 write_to_file_and_print(f"\nProduct {i}: {product}", f)
                 write_to_file_and_print(f"Operators: {', '.join(operators)}", f)
-                write_to_file_and_print(f"Status: No future releases found (after {today})", f)
+                write_to_file_and_print(f"Status: {status_msg}", f)
                 write_to_file_and_print("-" * 60, f)
         
         if unmapped_operators:
@@ -293,16 +376,16 @@ def format_results_by_product(operator_product_pairs, df, version_map):
         write_to_file_and_print(section_header, f)
         write_to_file_and_print("="*80, f)
         write_to_file_and_print(f"Query date: {today}", f)
-        write_to_file_and_print(f"Products with future releases: {len(products_with_releases)}", f)
-        write_to_file_and_print(f"Products with no future releases: {len(products_without_releases)}", f)
+        write_to_file_and_print(f"Products with releases: {len(products_with_releases)}", f)
+        write_to_file_and_print(f"Products with no releases: {len(products_without_releases)}", f)
         write_to_file_and_print(f"Unmapped operators: {len(unmapped_operators)}", f)
-        write_to_file_and_print(f"Total future releases found: {sum(len(matches) for _, _, matches in products_with_releases)}", f)
+        write_to_file_and_print(f"Total releases found: {sum(len(matches) for _, _, matches in products_with_releases)}", f)
         write_to_file_and_print(f"Total products analyzed: {len(product_groups)}", f)
         
         write_to_file_and_print("\nOperator Answer Breakdown:", f)
         write_to_file_and_print("-" * 40, f)
-        write_to_file_and_print(f"Operators with future releases: {len(operators_with_answers)}", f)
-        write_to_file_and_print(f"Operators without future releases: {len(operators_without_answers)}", f)
+        write_to_file_and_print(f"Operators with releases: {len(operators_with_answers)}", f)
+        write_to_file_and_print(f"Operators without releases: {len(operators_without_answers)}", f)
         write_to_file_and_print(f"Total operators analyzed: {len(operators_with_answers) + len(operators_without_answers)}", f)
         
         write_to_file_and_print("\nProduct Operator Breakdown:", f)
@@ -312,29 +395,42 @@ def format_results_by_product(operator_product_pairs, df, version_map):
         
         write_to_file_and_print("\n" + "="*80, f)
         write_to_file_and_print("Report generated by OpenShift Day 2 Operator Search Tool - Conan", f)
-        write_to_file_and_print(f"Filter applied: Only releases after {today}", f)
+        if show_all:
+            write_to_file_and_print("Filter applied: All releases (past and future)", f)
+        else:
+            write_to_file_and_print(f"Filter applied: Only releases after {today}", f)
         write_to_file_and_print("="*80, f)
     
-    print(f"\nResults exported to: results.txt")
-    print(f"Showing only releases after: {today}")
+    print(f"\nResults exported to: {output_file}")
+    if show_all:
+        print("Showing all releases (past and future)")
+    else:
+        print(f"Showing only releases after: {today}")
 
 def main():
+    args = parse_arguments()
+    
     print("Operator to Product/Release Search Tool")
     print("Processing in source.txt file order")
-    print(f"Filter: Only showing future releases (after {date.today()})")
+    if args.show_all:
+        print("Filter: Showing all releases (past and future)")
+    else:
+        print(f"Filter: Only showing future releases (after {date.today()})")
     print("="*60)
     
-    df = load_csv_data()
+    df = load_csv_data(args.csv_file)
     if df is None:
         return
     
-    version_map = load_reference_versions()
+    version_map = {}
+    if not args.no_version_filter:
+        version_map = load_reference_versions(args.reference_file)
     
-    operator_product_pairs = load_search_items()
+    operator_product_pairs = load_search_items(args.source_file)
     if not operator_product_pairs:
         return
     
-    format_results_by_product(operator_product_pairs, df, version_map)
+    format_results_by_product(operator_product_pairs, df, version_map, args.output_file, args.show_all)
 
 if __name__ == "__main__":
-    main() 
+    main()

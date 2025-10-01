@@ -111,7 +111,83 @@ pip install -r requirements.txt
 ### 4. Execute the Search Tool
 
 ```bash
+# Using Python interpreter
 python search_releases.py
+
+# Or using direct execution (recommended)
+./search_releases.py
+```
+
+## Command-Line Usage
+
+The tool now supports flexible command-line arguments for customizing input files, output options, and filtering behavior.
+
+### Basic Usage
+
+```bash
+# Use default files (source.txt, reference.txt, auto-detect CSV)
+python search_releases.py
+# Or use direct execution:
+./search_releases.py
+```
+
+### Command-Line Options
+
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--csv-file` | `-c` | Path to CSV file | Auto-detect Product-Pages-Export-*.csv or first .csv |
+| `--source-file` | `-s` | Path to source file with operator-product mappings | `source.txt` |
+| `--reference-file` | `-r` | Path to reference file with version filters | `reference.txt` |
+| `--output` | `-o` | Path to output file | `results.txt` |
+| `--show-all` | | Show all releases (past and future) | Only future releases |
+| `--no-version-filter` | | Disable version filtering from reference.txt | Version filtering enabled |
+
+### Usage Examples
+
+#### Custom Input Files
+```bash
+# Specify custom CSV and source files
+python search_releases.py -c mydata.csv -s operators.txt
+# Or use direct execution:
+./search_releases.py -c mydata.csv -s operators.txt
+
+# Specify custom reference file
+python search_releases.py -r my_versions.txt
+# Or use direct execution:
+./search_releases.py -r my_versions.txt
+```
+
+#### Output Options
+```bash
+# Save results to custom file
+python search_releases.py -o my_results.txt
+# Or use direct execution:
+./search_releases.py -o my_results.txt
+
+# Show all releases (not just future ones)
+python search_releases.py --show-all
+# Or use direct execution:
+./search_releases.py --show-all
+
+# Disable version filtering
+python search_releases.py --no-version-filter
+# Or use direct execution:
+./search_releases.py --no-version-filter
+```
+
+#### Combined Options
+```bash
+# Complete custom configuration
+python search_releases.py -c data.csv -s ops.txt -r versions.txt -o output.txt --show-all
+# Or use direct execution:
+./search_releases.py -c data.csv -s ops.txt -r versions.txt -o output.txt --show-all
+```
+
+#### Help
+```bash
+python search_releases.py --help
+# Or use direct execution:
+./search_releases.py --help
 ```
 
 ## Usage
@@ -239,4 +315,4 @@ For issues and questions:
 
 ---
 
-**Note**: This tool requires access to Red Hat Product Pages and is intended for Red Hat customers and partners with appropriate access credentials. 
+**Note**: This tool requires access to Red Hat Product Pages and is intended for Red Hat customers and partners with appropriate access credentials.

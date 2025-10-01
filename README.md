@@ -146,34 +146,34 @@ The tool first searches using the specific Release Name (Column 3 in `source.txt
 PRODUCTS WITH FUTURE RELEASES FOUND
 ================================================================================
 
-Product 1: Red Hat OpenShift Data Foundation
-Operators: ceph-csi-operator, mcg-operator, ocs-operator, odf-operator, ...
+Product 1: Red Hat Sample Product Suite
+Operators: sample-operator-1, sample-operator-2, sample-operator-3, ...
 ------------------------------------------------------------
-Found 8 future release(s), showing closest 2:
-  BU: Storage
-  Release: Red Hat OpenShift Data Foundation 4.20
-  GA date: 2026-01-05
-  GA name: odf-4.20.2
-  Maintainer: asriram (Anjana Sriram)
-  Link: http://productpages.redhat.com/odf-4.20/people/
-  Product: Red Hat OpenShift Data Foundation
+Found 5 future release(s), showing closest 2:
+  BU: Sample Business Unit
+  Release: Red Hat Sample Product Suite X.XX
+  GA date: 20XX-XX-XX
+  GA name: sample-product-x.xx.x
+  Maintainer: sampleuser (Sample Maintainer Name)
+  Link: http://productpages.redhat.com/sample-product-x.xx/people/
+  Product: Red Hat Sample Product Suite
   ----------------------------------------
-  BU: Storage
-  Release: Red Hat OpenShift Data Foundation 4.17
-  GA date: 2026-03-17
+  BU: Sample Business Unit
+  Release: Red Hat Sample Product Suite Y.YY
+  GA date: 20XX-YY-YY
   GA name: Maintenance Phase
-  Maintainer: asriram (Anjana Sriram)
-  Link: http://productpages.redhat.com/odf-4.17/people/
-  Product: Red Hat OpenShift Data Foundation
+  Maintainer: sampleuser (Sample Maintainer Name)
+  Link: http://productpages.redhat.com/sample-product-y.yy/people/
+  Product: Red Hat Sample Product Suite
   ----------------------------------------
 
 SUMMARY
 ================================================================================
-Query date: 2025-09-29
-Products with future releases: 7
-Products with no future releases: 6
-Total future releases found: 25
-Total operators analyzed: 35
+Query date: 20XX-XX-XX
+Products with future releases: X
+Products with no future releases: Y
+Total future releases found: XX
+Total operators analyzed: XX
 ```
 
 ## Supported Product Suites
@@ -191,20 +191,6 @@ Total operators analyzed: 35
 - **Red Hat OpenShift Distributed Tracing Platform** (1 operator)
 - **Observability** (1 operator)
 - **OpenShift Platform** (1 operator)
-
-## Features
-
-- ✅ **Version Filtering**: Filter releases by specific product versions using reference.txt
-- ✅ **Precise Release Matching**: Search by specific Release Name for accurate results
-- ✅ **Product Suite Grouping**: Automatically groups operators by their product suites
-- ✅ **Future Release Filtering**: Shows only releases with GA dates after the current date
-- ✅ **Closest Release Priority**: Displays the 2 closest releases per product for focused analysis
-- ✅ **Comprehensive Information**: Includes BU, Release, GA Date, GA Name, Maintainer, and Links
-- ✅ **CSV Processing**: Optimized for CSV file format for better performance
-- ✅ **Privacy Protection**: Results are automatically excluded from Git commits
-- ✅ **Detailed Statistics**: Provides comprehensive summary and breakdown information
-- ✅ **Comprehensive Coverage**: Supports 35 Day 2 operators across 13+ product suites
-- ✅ **Flexible Search**: Falls back from Release Name to Product Suite search automatically
 
 ## Troubleshooting
 
@@ -247,6 +233,7 @@ This project is licensed under the MIT License.
 ## Support
 
 For issues and questions:
+- Reach out to margonza@redhat.com
 - Open an issue in this repository
 - Check the Red Hat Product Pages documentation at https://productpages.redhat.com/
 

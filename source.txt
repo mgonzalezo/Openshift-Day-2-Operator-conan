@@ -3,11 +3,11 @@ Operator	Product Suite	Release Name
 2.  ceph-csi-operator	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
 3.  cert-manager-operator	OpenShift Platform	cert-manager Operator for Red Hat OpenShift
 4.  cluster-logging-operator	Red Hat OpenShift Logging	logging for Red Hat OpenShift
-5.  cluster-observability operator	Observability	cluster observability operator
+5.  cluster-observability operator	cluster observability operator	cluster observability operator
 6.  compliance-operator	Red Hat OpenShift Platform	Compliance Operator
 7.  file-integrity-operator	Red Hat OpenShift Platform	File Integrity Operator
 8.  openshift-custom-metrics-autoscaler	Red Hat OpenShift Platform	Custom Metrics Autoscaler Operator
-9.  loki-operator	Observability	logging for Red Hat OpenShift
+9.  loki-operator	logging for Red Hat OpenShift	logging for Red Hat OpenShift
 10. kiali-ossm	Red Hat OpenShift Service Mesh	Red Hat OpenShift Service Mesh
 11. kubernetes-nmstate-operator	Red Hat OpenShift Container Platform	Red Hat OpenShift Container Platform
 12. local-storage-operator	Red Hat OpenShift Container Platform	Red Hat OpenShift Container Platform

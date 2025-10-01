@@ -1,4 +1,4 @@
 OCP 4.20
 ACM 2.15
-Quay 3.15
+Quay 3.16
 ODF 4.20

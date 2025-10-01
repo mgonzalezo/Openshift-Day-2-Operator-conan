@@ -1,36 +1,36 @@
-Operator	Product Suite
-1.  advanced-cluster-management	Red Hat Advanced Cluster Management for Kubernetes
-2.  ceph-csi-operator	Red Hat OpenShift Data Foundation
-3.  cert-manager-operator	OpenShift Platform
-4.  cluster-logging-operator	Red Hat OpenShift Logging
-5.  cluster-observability operator	Observability
-6.  compliance-operator	Red Hat OpenShift Platform
-7.  file-integrity-operator	Red Hat OpenShift Platform
-8.  openshift-custom-metrics-autoscaler	Red Hat OpenShift Platform
-9.  loki-operator	Red Hat OpenShift Logging
-10. kiali-ossm	Red Hat OpenShift Service Mesh
-11. kubernetes-nmstate-operator	Red Hat OpenShift Container Platform
-12. local-storage-operator	Red Hat OpenShift Container Platform
-13. mcg-operator	Red Hat OpenShift Data Foundation
-14. metallb-operator	Red Hat OpenShift Container Platform
-15. multicluster-engine	Red Hat Advanced Cluster Management for Kubernetes
-16. numa-resources-operator	Red Hat OpenShift Platform
-17. node-healthcheck-operator	Red Hat OpenShift Platform
-18. oadp-operator	Red Hat OpenShift API for Data Protection
-19. ocs-operator	Red Hat OpenShift Data Foundation
-20. ocs-client-operator	Red Hat OpenShift Data Foundation
-21. odf-csi-addons-operator	Red Hat OpenShift Data Foundation
-22. odf-dependencies	Red Hat OpenShift Data Foundation
-23. odf-operator	Red Hat OpenShift Data Foundation
-24. odf-prometheus-operator	Red Hat OpenShift Data Foundation
-25. openshift-gitops-operator	Red Hat OpenShift GitOps
-26. power-monitoring-operator	Red Hat OpenShift Platform
-27. quay-operator	Red Hat Quay
-28. recipe	Red Hat OpenShift Data Foundation
-29. rhbk-operator	Red Hat Build of Keycloak
-30. rook-ceph-operator	Red Hat OpenShift Data Foundation
-31. self-node-remediation	Red Hat OpenShift Platform
-32. service-mesh-operator	Red Hat OpenShift Service Mesh
-33. sriov-network-operator	Red Hat OpenShift Container Platform
-34. tempo-product	Red Hat OpenShift Distributed Tracing Platform
-35. topology-aware-lifecycle-manager	Red Hat OpenShift Platform
+Operator	Product Suite	Release Name
+1.  advanced-cluster-management	Red Hat Advanced Cluster Management for Kubernetes	Red Hat Advanced Cluster Management for Kubernetes 2.15
+2.  ceph-csi-operator	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+3.  cert-manager-operator	OpenShift Platform	cert-manager Operator for Red Hat OpenShift
+4.  cluster-logging-operator	Red Hat OpenShift Logging	logging for Red Hat OpenShift
+5.  cluster-observability operator	Observability	cluster observability operator
+6.  compliance-operator	Red Hat OpenShift Platform	Compliance Operator
+7.  file-integrity-operator	Red Hat OpenShift Platform	File Integrity Operator
+8.  openshift-custom-metrics-autoscaler	Red Hat OpenShift Platform	Custom Metrics Autoscaler Operator
+9.  loki-operator	Observability	logging for Red Hat OpenShift
+10. kiali-ossm	Red Hat OpenShift Service Mesh	Red Hat OpenShift Service Mesh
+11. kubernetes-nmstate-operator	Red Hat OpenShift Container Platform	Red Hat OpenShift Container Platform
+12. local-storage-operator	Red Hat OpenShift Container Platform	Red Hat OpenShift Container Platform
+13. mcg-operator	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+14. metallb-operator	Red Hat OpenShift Container Platform	Red Hat OpenShift Container Platform
+15. multicluster-engine	Red Hat Advanced Cluster Management for Kubernetes	Red Hat Advanced Cluster Management for Kubernetes 2.15
+16. numa-resources-operator	Red Hat OpenShift Platform	NUMA Resources Operator
+17. node-healthcheck-operator	Red Hat OpenShift Platform	Node Health Check Operator
+18. oadp-operator	Red Hat OpenShift API for Data Protection	OADP Operator
+19. ocs-operator	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+20. ocs-client-operator	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+21. odf-csi-addons-operator	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+22. odf-dependencies	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+23. odf-operator	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+24. odf-prometheus-operator	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+25. openshift-gitops-operator	Red Hat OpenShift GitOps	Red Hat OpenShift GitOps
+26. power-monitoring-operator	Red Hat OpenShift Platform	Power Monitoring Operator for Red Hat OpenShift
+27. quay-operator	Red Hat Quay	Red Hat Quay
+28. recipe	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+29. rhbk-operator	Red Hat Build of Keycloak	Red Hat build of Keycloak
+30. rook-ceph-operator	Red Hat OpenShift Data Foundation	Red Hat OpenShift Data Foundation
+31. self-node-remediation	Red Hat OpenShift Platform	Self Node Remediation Operator
+32. service-mesh-operator	Red Hat OpenShift Service Mesh	Red Hat OpenShift Service Mesh
+33. sriov-network-operator	Red Hat OpenShift Container Platform	Red Hat OpenShift Container Platform
+34. tempo-product	Red Hat OpenShift Distributed Tracing Platform	Red Hat OpenShift distributed tracing platform
+35. topology-aware-lifecycle-manager	Red Hat OpenShift Platform	Topology Aware Lifecycle Manager

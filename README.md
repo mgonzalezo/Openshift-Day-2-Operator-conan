@@ -111,7 +111,11 @@ pip install -r requirements.txt
 ### 4. Execute the Search Tool
 
 ```bash
+# Using Python interpreter
 python search_releases.py
+
+# Or using direct execution (recommended)
+./search_releases.py
 ```
 
 ## Command-Line Usage
@@ -123,8 +127,7 @@ The tool now supports flexible command-line arguments for customizing input file
 ```bash
 # Use default files (source.txt, reference.txt, auto-detect CSV)
 python search_releases.py
-
-# Direct execution
+# Or use direct execution:
 ./search_releases.py
 ```
 
@@ -145,33 +148,45 @@ python search_releases.py
 ```bash
 # Specify custom CSV and source files
 python search_releases.py -c mydata.csv -s operators.txt
+# Or use direct execution:
+./search_releases.py -c mydata.csv -s operators.txt
 
 # Specify custom reference file
 python search_releases.py -r my_versions.txt
+# Or use direct execution:
+./search_releases.py -r my_versions.txt
 ```
 
 #### Output Options
 ```bash
 # Save results to custom file
 python search_releases.py -o my_results.txt
+# Or use direct execution:
+./search_releases.py -o my_results.txt
 
 # Show all releases (not just future ones)
 python search_releases.py --show-all
+# Or use direct execution:
+./search_releases.py --show-all
 
 # Disable version filtering
 python search_releases.py --no-version-filter
+# Or use direct execution:
+./search_releases.py --no-version-filter
 ```
 
 #### Combined Options
 ```bash
 # Complete custom configuration
 python search_releases.py -c data.csv -s ops.txt -r versions.txt -o output.txt --show-all
+# Or use direct execution:
+./search_releases.py -c data.csv -s ops.txt -r versions.txt -o output.txt --show-all
 ```
 
 #### Help
 ```bash
 python search_releases.py --help
-# or
+# Or use direct execution:
 ./search_releases.py --help
 ```
 

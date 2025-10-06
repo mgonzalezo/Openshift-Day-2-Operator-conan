@@ -6,6 +6,19 @@ import re
 import argparse
 from collections import OrderedDict
 from datetime import datetime, date
+from pathlib import Path
+
+def validate_file_path(file_path):
+    """Validate file path to prevent path traversal attacks"""
+    if not file_path:
+        raise ValueError("File path cannot be empty")
+
+    # Check for path traversal attempts
+    if '..' in Path(file_path).parts:
+        raise ValueError(f"Path traversal detected in '{file_path}'")
+
+    # Resolve to absolute path
+    return str(Path(file_path).resolve())
 
 def parse_arguments():
     """Parse command-line arguments"""
@@ -67,6 +80,11 @@ Examples:
 def load_csv_data(csv_file=None):
     try:
         if csv_file:
+            # Validate path for security
+            csv_file = validate_file_path(csv_file)
+            if not csv_file.endswith('.csv'):
+                print(f"Error: Invalid file type. Must be a .csv file")
+                return None
             print(f"Loading: {csv_file}")
             df = pd.read_csv(csv_file)
             print(f"Loaded {len(df)} records")
@@ -96,10 +114,16 @@ def load_reference_versions(reference_file='reference.txt'):
     """Load reference versions from reference.txt and create a mapping"""
     version_map = {}
     try:
+        # Validate path for security
+        reference_file = validate_file_path(reference_file)
+        if not reference_file.endswith('.txt'):
+            print(f"Error: Invalid file type. Must be a .txt file")
+            return version_map
+
         if not os.path.exists(reference_file):
             print(f"Warning: {reference_file} not found, no version filtering will be applied")
             return version_map
-        
+
         with open(reference_file, 'r', encoding='utf-8') as f:
             lines = [line.strip() for line in f if line.strip()]
         
@@ -129,10 +153,16 @@ def load_reference_versions(reference_file='reference.txt'):
 
 def load_search_items(source_file='source.txt'):
     try:
+        # Validate path for security
+        source_file = validate_file_path(source_file)
+        if not source_file.endswith('.txt'):
+            print(f"Error: Invalid file type. Must be a .txt file")
+            return []
+
         if not os.path.exists(source_file):
             print(f"Error: {source_file} not found")
             return []
-        
+
         with open(source_file, 'r', encoding='utf-8') as f:
             lines = [line.strip() for line in f if line.strip()]
         
@@ -217,7 +247,13 @@ def write_to_file_and_print(text, file_handle=None):
 def format_results_by_product(operator_product_pairs, df, version_map, output_file='results.txt', show_all=False):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     today = date.today()
-    
+
+    # Validate output path for security
+    output_file = validate_file_path(output_file)
+    if not output_file.endswith('.txt'):
+        print(f"Error: Invalid file type. Must be a .txt file")
+        return
+
     with open(output_file, 'w', encoding='utf-8') as f:
         header = f"OpenShift Day 2 Operator Search Results - Conan Tool"
         write_to_file_and_print(header, f)

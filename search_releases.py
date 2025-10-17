@@ -4,6 +4,8 @@ import pandas as pd
 import os
 import re
 import argparse
+import urllib.request
+import urllib.error
 from collections import OrderedDict
 from datetime import datetime, date
 from pathlib import Path
@@ -19,6 +21,85 @@ def validate_file_path(file_path):
 
     # Resolve to absolute path
     return str(Path(file_path).resolve())
+
+def download_google_sheet(sheet_url, output_name=None):
+    """
+    Download Google Sheet as CSV to kb/ folder
+
+    Args:
+        sheet_url: Google Sheets URL (can be view or edit URL)
+        output_name: Optional custom name for the file
+
+    Returns:
+        Path to downloaded file, or None if failed
+    """
+    # Ensure kb folder exists
+    kb_folder = "kb"
+    if not os.path.exists(kb_folder):
+        os.makedirs(kb_folder)
+        print(f"Created {kb_folder}/ folder")
+
+    # Extract sheet ID and GID from URL
+    try:
+        # Handle both edit and view URLs
+        if '/d/' in sheet_url:
+            sheet_id = sheet_url.split('/d/')[1].split('/')[0]
+        else:
+            print(f"Error: Invalid Google Sheets URL format")
+            return None
+
+        # Extract GID (sheet tab ID) if present
+        gid = "0"  # Default to first sheet
+        if 'gid=' in sheet_url:
+            gid = sheet_url.split('gid=')[1].split('&')[0].split('#')[0]
+
+        # Construct CSV export URL
+        export_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid={gid}"
+
+        # Generate filename
+        timestamp = datetime.now().strftime("%m-%d-%y")
+        if output_name:
+            filename = f"{output_name}-{timestamp}.csv"
+        else:
+            filename = f"Google-Sheet-{sheet_id}-{timestamp}.csv"
+
+        filepath = os.path.join(kb_folder, filename)
+
+        print(f"Downloading Google Sheet...")
+        print(f"  Sheet ID: {sheet_id}")
+        print(f"  GID: {gid}")
+        print(f"  Saving to: {filepath}")
+
+        # Download the file
+        urllib.request.urlretrieve(export_url, filepath)
+
+        # Verify download
+        file_size = os.path.getsize(filepath)
+        if file_size == 0:
+            print(f"Error: Downloaded file is empty")
+            os.remove(filepath)
+            return None
+
+        size_kb = file_size / 1024
+        print(f"✓ Downloaded {size_kb:.2f} KB")
+
+        # Count records
+        with open(filepath, 'r', encoding='utf-8') as f:
+            line_count = sum(1 for _ in f) - 1
+        print(f"✓ Records: ~{line_count}")
+
+        return filepath
+
+    except urllib.error.HTTPError as e:
+        print(f"Error: HTTP {e.code} - {e.reason}")
+        print("  This may mean the sheet is not shared with 'Anyone with the link'")
+        return None
+    except urllib.error.URLError as e:
+        print(f"Error: Network error - {e.reason}")
+        return None
+    except Exception as e:
+        print(f"Error downloading Google Sheet: {e}")
+        return None
 
 def parse_arguments():
     """Parse command-line arguments"""
@@ -39,7 +120,7 @@ Examples:
         '-c', '--csv-file',
         dest='csv_file',
         default=None,
-        help='Path to CSV file (default: auto-detect Product-Pages-Export-*.csv or first .csv file)'
+        help='Path to CSV file (default: auto-detect Product-Pages-Export-*.csv in kb/ folder or current directory)'
     )
     
     parser.add_argument(
@@ -74,7 +155,19 @@ Examples:
         action='store_true',
         help='Disable version filtering from reference.txt'
     )
-    
+
+    parser.add_argument(
+        '--sync',
+        metavar='GOOGLE_SHEET_URL',
+        help='Download latest data from Google Sheet before running (requires shared URL)'
+    )
+
+    parser.add_argument(
+        '--sync-name',
+        metavar='NAME',
+        help='Custom name for synced data file (used with --sync)'
+    )
+
     return parser.parse_args()
 
 def load_csv_data(csv_file=None):
@@ -90,22 +183,44 @@ def load_csv_data(csv_file=None):
             print(f"Loaded {len(df)} records")
             return df
         else:
-            product_pages_files = [f for f in os.listdir('.') if f.startswith('Product-Pages-Export') and f.endswith('.csv')]
-            if product_pages_files:
-                csv_file = product_pages_files[0]
-            else:
-                csv_files = [f for f in os.listdir('.') if f.endswith('.csv')]
-                if not csv_files:
-                    print("Error: No CSV file found")
-                    return None
-                csv_file = csv_files[0]
-            
+            # Auto-detect: First check kb/ folder, then current directory
+            search_dirs = ['kb', '.']
+            csv_file = None
+
+            for search_dir in search_dirs:
+                if not os.path.exists(search_dir):
+                    continue
+
+                # Look for Product-Pages-Export files first
+                product_pages_files = [
+                    os.path.join(search_dir, f)
+                    for f in os.listdir(search_dir)
+                    if f.startswith('Product-Pages-Export') and f.endswith('.csv')
+                ]
+                if product_pages_files:
+                    # Sort to get the most recent (by filename)
+                    csv_file = sorted(product_pages_files)[-1]
+                    break
+
+                # Fall back to any CSV file
+                csv_files = [
+                    os.path.join(search_dir, f)
+                    for f in os.listdir(search_dir)
+                    if f.endswith('.csv')
+                ]
+                if csv_files:
+                    csv_file = csv_files[0]
+                    break
+
+            if not csv_file:
+                print("Error: No CSV file found in kb/ folder or current directory")
+                return None
+
             print(f"Loading: {csv_file}")
-            
             df = pd.read_csv(csv_file)
             print(f"Loaded {len(df)} records")
             return df
-        
+
     except Exception as e:
         print(f"Error: {e}")
         return None
@@ -445,7 +560,7 @@ def format_results_by_product(operator_product_pairs, df, version_map, output_fi
 
 def main():
     args = parse_arguments()
-    
+
     print("Operator to Product/Release Search Tool")
     print("Processing in source.txt file order")
     if args.show_all:
@@ -453,8 +568,21 @@ def main():
     else:
         print(f"Filter: Only showing future releases (after {date.today()})")
     print("="*60)
-    
-    df = load_csv_data(args.csv_file)
+
+    # Handle Google Sheets sync if requested
+    csv_file_to_use = args.csv_file
+    if args.sync:
+        print("\n🔄 Syncing data from Google Sheet...")
+        print("="*60)
+        downloaded_file = download_google_sheet(args.sync, args.sync_name)
+        if downloaded_file:
+            csv_file_to_use = downloaded_file
+            print("="*60)
+        else:
+            print("Warning: Failed to download Google Sheet, will try to use existing data")
+            print("="*60)
+
+    df = load_csv_data(csv_file_to_use)
     if df is None:
         return
     

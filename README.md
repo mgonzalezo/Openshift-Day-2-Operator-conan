@@ -21,6 +21,8 @@ Openshift-Day-2-Operator-conan/
 ├── search_releases.py           # Main search script
 ├── source.txt                   # Day 2 operators and product suite mappings
 ├── reference.txt                # Target versions (OCP, ACM, Quay, ODF)
+├── kb/                          # Knowledge base folder for CSV data sources
+│   └── Product-Pages-Export-*.csv  # Red Hat Product Pages CSV exports
 └── .gitignore                   # Git ignore rules
 ```
 
@@ -90,7 +92,14 @@ cd Openshift-Day-2-Operator-conan
 1. Access the **"Reports"** section at https://productpages.redhat.com/
 2. Navigate to the **"Exports"** section
 3. Select **"Google Sheets Export"**
-4. Download the **CSV file** to the same folder as this repository (the tool now uses CSV format for better performance)
+4. Download the **CSV file** and save it in the `kb/` folder (the tool now uses CSV format for better performance)
+
+**Knowledge Base (`kb/`) folder**:
+- The `kb/` folder serves as the central repository for all CSV data sources from Red Hat Product Pages
+- Place all Product Pages CSV exports in this folder
+- The tool automatically searches the `kb/` folder first for CSV files
+- Multiple CSV files can be stored for historical comparison
+- When run without specifying a CSV file, the tool automatically selects the most recent `Product-Pages-Export-*.csv` file from the `kb/` folder
 
 ### 3. Set Up Python Environment
 
@@ -135,7 +144,7 @@ python search_releases.py
 
 | Option | Short | Description | Default |
 |--------|-------|-------------|---------|
-| `--csv-file` | `-c` | Path to CSV file | Auto-detect Product-Pages-Export-*.csv or first .csv |
+| `--csv-file` | `-c` | Path to CSV file | Auto-detect most recent Product-Pages-Export-*.csv in kb/ folder |
 | `--source-file` | `-s` | Path to source file with operator-product mappings | `source.txt` |
 | `--reference-file` | `-r` | Path to reference file with version filters | `reference.txt` |
 | `--output` | `-o` | Path to output file | `results.txt` |
@@ -194,7 +203,7 @@ python search_releases.py --help
 
 The tool will automatically:
 
-1. **Load** the downloaded CSV file from Red Hat Product Pages
+1. **Load** the most recent CSV file from the `kb/` folder (or current directory as fallback)
 2. **Parse** the operator-to-product mappings from `source.txt` (including Release Name for precise matching)
 3. **Apply** version filtering based on `reference.txt` to match your target platform versions
 4. **Filter** results to show only future releases (after current date)
@@ -274,8 +283,8 @@ Total operators analyzed: XX
 
 1. **"No CSV file found"**
    - Ensure you've downloaded the CSV export from Red Hat Product Pages
-   - Verify the file is in the same directory as the script
-   - The tool looks for files starting with "Product-Pages-Export"
+   - Verify the file is in the `kb/` folder (or current directory as fallback)
+   - The tool looks for files starting with "Product-Pages-Export" in the `kb/` folder first
 
 2. **"No future releases found"**
    - The tool only shows releases with GA dates after the current date
